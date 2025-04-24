@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confrence-booking</title>
+</head>
+<body>
+    <form method="post" action="/bookslot">
+        <label>Enter your name</label>
+        <input type='text' name="name"/> <br />
+        <label>conference room</label>
+        <select name="room">
+          <option value= "conference room 1">conference room 1</option>
+          <option value= "conference room 2">conference room 2</option>
+          <option value= "conference room 3">conference room 3</option>
+        </select> <br />
+        <label>Date</label>
+        <input type='date' name="date" /> <br/>
+        <label>Slot</label>
+        <input type="time" name="startTime"/>
+        <input type="time" name="endTime"/> <br />
+        <button type='submit'>submit</button>
+      </form>
+</body>
+</html>
