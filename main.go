@@ -31,6 +31,10 @@ func main() {
 		tmpl.Execute(res, nil)
 	})
 
+	http.HandleFunc("/2.0", func(res http.ResponseWriter, req *http.Request) {
+		http.ServeFile(res, req, "index2.0.html")
+	})
+
 	http.HandleFunc("/form", func(res http.ResponseWriter, req *http.Request) {
 		http.ServeFile(res, req, "form.html")
 	})
@@ -41,35 +45,7 @@ func main() {
 
 	http.HandleFunc("/history", func(res http.ResponseWriter, req *http.Request) {
 		readJSON(bookingDetailsMap)
-		historyMapByDate := make(map[string]map[string]map[string][]BookingDetail)
-		for room, dateMap := range bookingDetailsMap {
-			for date, bookingDetailsArray := range dateMap {
-				for i := range bookingDetailsArray {
-					bookingDetail := bookingDetailsArray[i]
-					fmt.Println(bookingDetail)
-					historyDateMap, existHistoryRoom := historyMapByDate[room]
-					if existHistoryRoom {
-						historyUserMap, existHistoryDate := historyDateMap[date]
-						if existHistoryDate {
-							historyBookingDetailsArray, existHistoryUser := historyUserMap[bookingDetail.Name]
-							if existHistoryUser {
-								historyBookingDetailsArray = append(historyBookingDetailsArray, bookingDetail)
-								historyUserMap[bookingDetail.Name] = historyBookingDetailsArray
-							} else {
-								historyUserMap[bookingDetail.Name] = []BookingDetail{bookingDetail}
-							}
-
-						} else {
-							historyDateMap[date] = map[string][]BookingDetail{bookingDetail.Name: {bookingDetail}}
-						}
-
-					} else {
-						historyMapByDate[room] = map[string]map[string][]BookingDetail{bookingDetail.Date: {bookingDetail.Name: {bookingDetail}}}
-					}
-				}
-			}
-		}
-		fmt.Println("History map", historyMapByDate)
+		historyMapByDate := getHistoryMapByDate(bookingDetailsMap)
 		tmplhistory.Execute(res, historyMapByDate)
 	})
 
@@ -118,6 +94,39 @@ func main() {
 	// Start the server
 	fmt.Println("Server is running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
+}
+
+func getHistoryMapByDate(bookingDetailsMap map[string]map[string][]BookingDetail) map[string]map[string]map[string][]BookingDetail {
+	historyMapByDate := make(map[string]map[string]map[string][]BookingDetail)
+	for room, dateMap := range bookingDetailsMap {
+		for date, bookingDetailsArray := range dateMap {
+			for i := range bookingDetailsArray {
+				bookingDetail := bookingDetailsArray[i]
+				fmt.Println(bookingDetail)
+				historyDateMap, existHistoryRoom := historyMapByDate[room]
+				if existHistoryRoom {
+					historyUserMap, existHistoryDate := historyDateMap[date]
+					if existHistoryDate {
+						historyBookingDetailsArray, existHistoryUser := historyUserMap[bookingDetail.Name]
+						if existHistoryUser {
+							historyBookingDetailsArray = append(historyBookingDetailsArray, bookingDetail)
+							historyUserMap[bookingDetail.Name] = historyBookingDetailsArray
+						} else {
+							historyUserMap[bookingDetail.Name] = []BookingDetail{bookingDetail}
+						}
+
+					} else {
+						historyDateMap[date] = map[string][]BookingDetail{bookingDetail.Name: {bookingDetail}}
+					}
+
+				} else {
+					historyMapByDate[room] = map[string]map[string][]BookingDetail{bookingDetail.Date: {bookingDetail.Name: {bookingDetail}}}
+				}
+			}
+		}
+	}
+	fmt.Println("History map", historyMapByDate)
+	return historyMapByDate
 }
 
 func isSlotAvailable(bookingArray []BookingDetail, startTime, endTime time.Time) bool {
