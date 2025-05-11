@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking History</title>
+</head>
+<body>
+
+        {{ range $room,$dateMap := .}}
+
+            <h1> {{$room}}</h1>
+                <ul> 
+                    <li>
+                        {{range $date, $userMap := $dateMap}}
+                            <h2> {{$date}} </h2>
+                                <ul>
+                                    <li>
+                                        {{ range $user, $bookingArray := $userMap}}
+                                            <h3> {{$user}} </h3>
+                                                <ul>
+                                                    <li>
+                                                        {{range $bookingArray}}
+                                                            <p> {{.StartTime}} - {{.EndTime}} </p>
+                                                        {{end}}
+                                                    </li>
+                                                </ul>
+                                        {{end}}
+                                    </li>
+                                </ul>
+                                
+                        {{end}}
+                    </li>
+                </ul>
+
+        {{end}}
+</body>
+</html>

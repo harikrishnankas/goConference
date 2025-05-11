@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -22,10 +23,54 @@ func main() {
 
 	//map to store booingdetails
 	bookingDetailsMap := make(map[string]map[string][]BookingDetail)
+	tmpl := template.Must(template.ParseFiles("index.html"))
+	tmplhistory := template.Must(template.ParseFiles("history.html"))
 
 	// Serve the HTML file
 	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
-		http.ServeFile(res, req, "index.html")
+		tmpl.Execute(res, nil)
+	})
+
+	http.HandleFunc("/form", func(res http.ResponseWriter, req *http.Request) {
+		http.ServeFile(res, req, "form.html")
+	})
+
+	http.HandleFunc("/js", func(res http.ResponseWriter, req *http.Request) {
+		http.ServeFile(res, req, "index.js")
+	})
+
+	http.HandleFunc("/history", func(res http.ResponseWriter, req *http.Request) {
+		readJSON(bookingDetailsMap)
+		historyMapByDate := make(map[string]map[string]map[string][]BookingDetail)
+		for room, dateMap := range bookingDetailsMap {
+			for date, bookingDetailsArray := range dateMap {
+				for i := range bookingDetailsArray {
+					bookingDetail := bookingDetailsArray[i]
+					fmt.Println(bookingDetail)
+					historyDateMap, existHistoryRoom := historyMapByDate[room]
+					if existHistoryRoom {
+						historyUserMap, existHistoryDate := historyDateMap[date]
+						if existHistoryDate {
+							historyBookingDetailsArray, existHistoryUser := historyUserMap[bookingDetail.Name]
+							if existHistoryUser {
+								historyBookingDetailsArray = append(historyBookingDetailsArray, bookingDetail)
+								historyUserMap[bookingDetail.Name] = historyBookingDetailsArray
+							} else {
+								historyUserMap[bookingDetail.Name] = []BookingDetail{bookingDetail}
+							}
+
+						} else {
+							historyDateMap[date] = map[string][]BookingDetail{bookingDetail.Name: {bookingDetail}}
+						}
+
+					} else {
+						historyMapByDate[room] = map[string]map[string][]BookingDetail{bookingDetail.Date: {bookingDetail.Name: {bookingDetail}}}
+					}
+				}
+			}
+		}
+		fmt.Println("History map", historyMapByDate)
+		tmplhistory.Execute(res, historyMapByDate)
 	})
 
 	// Handle form submission
@@ -47,6 +92,8 @@ func main() {
 					if isSlotAvailable(bookingArray, startTime, endTime) {
 						bookingArray = append(bookingArray, data)
 						dateMap[date] = bookingArray
+					} else {
+						tmpl.Execute(res, "Already booked")
 					}
 				} else {
 					dateMap[date] = []BookingDetail{data}
@@ -60,7 +107,8 @@ func main() {
 
 			// Respond to the client
 			// res.Write([]byte("Form submitted successfully!"))
-			http.ServeFile(res, req, "index.html")
+			// http.ServeFile(res, req, "index.html")
+			tmpl.Execute(res, "Submmited")
 		} else {
 			http.Error(res, "Invalid request method", http.StatusMethodNotAllowed)
 		}

@@ -1,0 +1,47 @@
+{
+  "conference room 1": {
+    "2025-05-15": [
+      {
+        "name": "hari",
+        "room": "conference room 1",
+        "date": "2025-05-15",
+        "startTime": "2025-05-15T18:00:00+05:30",
+        "endTime": "2025-05-15T21:00:00+05:30"
+      },
+      {
+        "name": "HK",
+        "room": "conference room 1",
+        "date": "2025-05-15",
+        "startTime": "2025-05-15T15:23:00+05:30",
+        "endTime": "2025-05-15T13:26:00+05:30"
+      },
+      {
+        "name": "HK",
+        "room": "conference room 1",
+        "date": "2025-05-15",
+        "startTime": "2025-05-15T21:23:00+05:30",
+        "endTime": "2025-05-15T21:20:00+05:30"
+      }
+    ],
+    "2025-05-28": [
+      {
+        "name": "HK",
+        "room": "conference room 1",
+        "date": "2025-05-28",
+        "startTime": "2025-05-28T16:22:00+05:30",
+        "endTime": "2025-05-28T19:22:00+05:30"
+      }
+    ]
+  },
+  "conference room 2": {
+    "2025-05-07": [
+      {
+        "name": "Hari",
+        "room": "conference room 2",
+        "date": "2025-05-07",
+        "startTime": "2025-05-07T17:24:00+05:30",
+        "endTime": "2025-05-07T13:27:00+05:30"
+      }
+    ]
+  }
+}
