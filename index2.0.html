@@ -4,83 +4,37 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Schedule Meeting</title>
-  <style>
-    body {
-      background-color: #1e1e1e;
-      color: white;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .calendar-container {
-      display: flex;
-    }
-    .time-labels {
-      display: flex;
-      flex-direction: column;
-      margin-right: 10px;
-    }
-    .time-label {
-      height: 40px;
-      line-height: 40px;
-      text-align: right;
-      padding-right: 10px;
-      font-size: 14px;
-      color: #ccc;
-    }
-    .header-space {
-      height: 50px; /* Increased height for better alignment */
-    }
-    .calendar {
-      display: flex;
-    }
-    .column {
-      display: flex;
-      flex-direction: column;
-    }
-    .day-header {
-      background-color: #2a2a2a;
-      font-weight: bold;
-      text-align: center;
-      padding: 10px;
-      border: 1px solid #444;
-      height: 50px; /* Increased height for better alignment */
-      line-height: 30px;
-    }
-    .time-slot {
-      width: 120px;
-      height: 40px;
-      border: 1px solid #444;
-      text-align: center;
-      line-height: 40px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .time-slot:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-    .highlight {
-      background-color: rgba(0, 120, 212, 0.6);
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div class="header">
-    <div>
-      <strong>Schedule Meeting</strong><br/>
-      Time Zone: (UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi
+<body onload="load()">
+  <div class="form" >
+    <div class="header">
+      <div class="name">
+        <label for="name">Name:</label>
+        <input type="text" id="name" />
+      </div>
+      <label for="name">conference room:</label>
+      <div class="room">
+       <select name="room">
+          <option value="conference room 1">conference room 1</option>
+          <option value="conference room 2">conference room 2</option>
+          <option value="conference room 3">conference room 3</option>
+      </select>
+      </div>
     </div>
-    <div>
-      <label for="date">Date:</label>
-      <input type="date" id="date" value="2025-05-11"/>
-      <label for="time">Time:</label>
-      <input type="time" id="time" value="16:30"/>
+    <div class="header">
+      <div class="date">
+        <label for="date">Date:</label>
+        <input type="date" id="date" />
+      </div>
+      <div class="startTime">
+        <label for="startTime">StartTime:</label>
+        <input type="time" id="startTime" />
+      </div>
+      <div class="endTime">
+        <label for="endTime">EndTime:</label>
+        <input type="time" id="endTime" />
+      </div>
     </div>
   </div>
 
@@ -88,49 +42,9 @@
     <div class="time-labels" id="timeLabels">
       <div class="time-label header-space"></div>
     </div>
-    <div class="calendar">
-      <div class="column">
-        <div class="day-header">Sun 11</div>
-        <div id="day0"></div>
-      </div>
-      <div class="column">
-        <div class="day-header">Mon 12</div>
-        <div id="day1"></div>
-      </div>
-    </div>
+    <div id="calendar"></div>
   </div>
 
-  <script>
-    const timeLabels = document.getElementById('timeLabels');
-    const hours = [
-      '08:00', '08:30', '09:00', '09:30', '10:00',
-      '10:30', '11:00', '11:30', '12:00', '12:30',
-      '13:00', '13:30', '14:00', '14:30', '15:00',
-      '15:30', '16:00', '16:30', '17:00', '17:30'
-    ];
-
-    hours.forEach(hour => {
-      const label = document.createElement('div');
-      label.className = 'time-label';
-      label.textContent = hour;
-      timeLabels.appendChild(label);
-    });
-
-    for (let i = 0; i < 2; i++) {
-      const dayColumn = document.getElementById(`day${i}`);
-      hours.forEach(hour => {
-        const slot = document.createElement('div');
-        slot.className = 'time-slot';
-        slot.dataset.time = hour;
-        slot.dataset.day = i;
-
-        slot.addEventListener('click', () => {
-          slot.classList.toggle('highlight');
-        });
-
-        dayColumn.appendChild(slot);
-      });
-    }
-  </script>
+  <script src="index2.0.js" charset="UTF-8"></script>
 </body>
 </html>
