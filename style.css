@@ -20,34 +20,30 @@
     }
     .calendar-container {
       display: flex;
-      flex-direction: column;
     }
     .time-labels {
       display: flex;
+      flex-direction: column;
     }
     .time-label {
-      width: 10vw;
       height: 40px;
+      line-height: 40px;
+      text-align: right;
+      padding-right: 10px;
       font-size: 14px;
       color: #ccc;
       border: 1px solid #444;
     }
     .time-label-header {
-      background-color: #2a2a2a;
+      /* background-color: #2a2a2a; */
       font-weight: bold;
       text-align: center;
       padding: 10px;
       border: 1px solid #444;
+      height: 50px; /* Increased height for better alignment */
       line-height: 30px;
     }
     #calendar {
-      display: flex;
-      flex-direction: column;
-    }
-    .day{
-      display: flex;
-    }
-    .day-body{
       display: flex;
     }
     .column {
@@ -60,13 +56,12 @@
       text-align: center;
       padding: 10px;
       border: 1px solid #444;
+      height: 50px; /* Increased height for better alignment */
       line-height: 30px;
-      width: 5vw;
-      height: 10vh;
     }
     .time-slot {
-      width: 5vw;
-      height: 10vh;
+      width: 120px;
+      height: 40px;
       border: 1px solid #444;
       text-align: center;
       line-height: 40px;
