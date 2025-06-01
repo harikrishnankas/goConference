@@ -3,8 +3,6 @@ async function loadContent(url, selector) {
       const response = await fetch(url);
       const text = await response.text();
       const element = document.querySelector(selector);
-      console.log(element)
-      console.log(text)
       if (element) {
         element.innerHTML = text;
       }
@@ -14,6 +12,6 @@ async function loadContent(url, selector) {
   }
 
 // document.addEventListener("DOMContentLoaded", function(event) { 
-  loadContent("/form", "#form");
+  // loadContent("/form", "#form");
 // });
   

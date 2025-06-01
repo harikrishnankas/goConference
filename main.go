@@ -35,6 +35,14 @@ func main() {
 		http.ServeFile(res, req, "index2.0.html")
 	})
 
+	http.HandleFunc("/2.0js", func(res http.ResponseWriter, req *http.Request) {
+		http.ServeFile(res, req, "index2.0.js")
+	})
+
+	http.HandleFunc("/2.0css", func(res http.ResponseWriter, req *http.Request) {
+		http.ServeFile(res, req, "style.css")
+	})
+
 	http.HandleFunc("/form", func(res http.ResponseWriter, req *http.Request) {
 		http.ServeFile(res, req, "form.html")
 	})

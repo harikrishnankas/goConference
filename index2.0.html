@@ -7,8 +7,14 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body onload="load()">
-  <div class="form" >
-    <div class="header">
+  <div id="spinner-container">
+    <div>
+      <p>Enna Ramalingam allae paka midiyala epdi iruka</p>
+    </div>
+  <div class="spinner"></div>
+</div>
+  <div class="form" style="position: sticky;top: 0;">
+    <div class="form-elements-container">
       <div class="name">
         <label for="name">Name:</label>
         <input type="text" id="name" />
@@ -22,7 +28,7 @@
       </select>
       </div>
     </div>
-    <div class="header">
+    <div class="form-elements-container">
       <div class="date">
         <label for="date">Date:</label>
         <input type="date" id="date" onchange="changeCalendarHeader()"/>
@@ -39,9 +45,11 @@
   </div>
 
   <div class="calendar-container">
-    <div class="time-labels" id="timeLabels">
+    <div class="calendar" style="display: flex; margin-left: auto; margin-right: auto;">
+      <div class="time-labels" id="timeLabels"></div>
+      <div id="calendar-dates"></div>
     </div>
-    <div id="calendar"></div>
+    
   </div>
 
   <script src="index2.0.js" charset="UTF-8"></script>

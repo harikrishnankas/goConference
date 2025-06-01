@@ -60,7 +60,7 @@ function createCalendar(){
     
 
     const label = document.createElement('div');
-        label.className = 'time-label-header';
+        label.className = 'day-header';
         // label.textContent = "timing";
         timeLabels.appendChild(label);
 
@@ -70,7 +70,7 @@ function createCalendar(){
         label.textContent = hour;
         timeLabels.appendChild(label);
         });
-    const calendar = document.getElementById("calendar")
+    const calendar = document.getElementById("calendar-dates")
     for (let i = 0; i < 7; i++) {
         const dayColumn = document.createElement("div");
         dayColumn.className = "day"
@@ -84,7 +84,7 @@ function createCalendar(){
         dayBody.className = "day-body"
         hours.forEach(hour => {
             const slot = document.createElement('div');
-            slot.className = 'time-slot';
+            slot.className = 'Calendar-time-slot';
             slot.dataset.time = hour;
             slot.dataset.day = i;
 
@@ -106,9 +106,35 @@ function createCalendar(){
     }
 }
 
+function updatesize(){
+    const formHeight = document.getElementsByClassName("form")[0].getBoundingClientRect().height;
+    const calendarTimeSlotHeight = document.getElementsByClassName("Calendar-time-slot")[0].getBoundingClientRect().height;
+    document.querySelectorAll(".day-header").forEach(header =>{
+        header.style.top = formHeight + "px"
+    })
+    document.querySelectorAll(".time-label").forEach(timeLabel =>{
+        console.log(calendarTimeSlotHeight)
+        timeLabel.style.height = calendarTimeSlotHeight + "px"
+    })
+}
 
 function load(){
     const currentTime = new Date();
     setTimeToHtml(currentTime);
     createCalendar();
+    updatesize()
 }
+
+window.addEventListener("load", () => {
+    const spinnerContainer = document.getElementById("spinner-container");
+    const spinner = document.getElementsByClassName("spinner")[0];
+    // Hide the spinner
+    setTimeout(() => {
+        spinnerContainer.style.display = 'none';
+        spinnerContainer.remove(); 
+  }, 2000);
+})
+
+window.addEventListener("resize", updatesize());
+
+
