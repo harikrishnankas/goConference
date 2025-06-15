@@ -35,11 +35,11 @@
  .time-label {
    text-align: center;
    /* padding-right: 10px; */
-   /* font-size: 14px; */
+   font-size: 14px;
    color: #ccc;
    /* padding: 1vw; */
-   /* border: 1px solid #444; */
-   /* height: 7vh; */
+   border: 1px solid #444;
+   height: 7vh;
  }
 
  .time-label-header {
@@ -81,6 +81,12 @@
 
  .Calendar-time-slot:hover {
    background-color: rgba(255, 255, 255, 0.1);
+ }
+
+ .no-hover:hover {
+    background-color: inherit !important;
+    color: inherit !important;
+    box-shadow: none !important;
  }
 
  .highlight {

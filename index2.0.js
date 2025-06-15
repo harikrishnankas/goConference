@@ -31,6 +31,7 @@ function changeCalendarHeader(){
         setHeaderForCalendar(changedate,day.children[0],i)
 
     })
+    loadData("/history")
 }
 
 function dummy(){
@@ -82,13 +83,22 @@ function createCalendar(){
 
         const dayBody = document.createElement("div")
         dayBody.className = "day-body"
+        dayColumn.appendChild(dayBody)
         hours.forEach(hour => {
             const slot = document.createElement('div');
             slot.className = 'Calendar-time-slot';
             slot.dataset.time = hour;
             slot.dataset.day = i;
+            dayBody.appendChild(slot);
+            slot.addEventListener('click', updateCalendarDateStyle); 
+        });
+        calendar.appendChild(dayColumn)
+    }
+}
 
-            slot.addEventListener('click', () => {
+function updateCalendarDateStyle(event) {
+
+    const slot = event.currentTarget;
                 Array.from(document.getElementsByClassName("highlight")).forEach(element => element.classList.toggle("highlight"))
                 time = slot.dataset.time
                 date = new Date(slot.parentElement.parentElement.children[0].dataset.date)
@@ -96,45 +106,115 @@ function createCalendar(){
                 setTimeToHtml(selectedTime);
                 slot.classList.toggle('highlight');
                 selectedTimeInCalendar = slot;
-            });
+            }
 
-            dayBody.appendChild(slot);
-        });
-        dayColumn.appendChild(dayBody)
-
-        calendar.appendChild(dayColumn)
-    }
-}
-
-function updatesize(){
+function updateHeight(){
+    // console.log("resize")
     const formHeight = document.getElementsByClassName("form")[0].getBoundingClientRect().height;
-    const calendarTimeSlotHeight = document.getElementsByClassName("Calendar-time-slot")[0].getBoundingClientRect().height;
+    // const calendarTimeSlotHeight = document.getElementsByClassName("Calendar-time-slot")[0].getBoundingClientRect().height;
     document.querySelectorAll(".day-header").forEach(header =>{
-        header.style.top = formHeight + "px"
+        header.style.top = (formHeight) + "px"
     })
-    document.querySelectorAll(".time-label").forEach(timeLabel =>{
-        console.log(calendarTimeSlotHeight)
-        timeLabel.style.height = calendarTimeSlotHeight + "px"
-    })
+    // document.querySelectorAll(".time-label").forEach(timeLabel =>{
+    //     console.log(calendarTimeSlotHeight)
+    //     timeLabel.style.height = calendarTimeSlotHeight + "px"
+    // })
 }
 
 function load(){
     const currentTime = new Date();
     setTimeToHtml(currentTime);
     createCalendar();
-    updatesize()
+    updateHeight();
+    loadData("/history")
 }
 
-window.addEventListener("load", () => {
-    const spinnerContainer = document.getElementById("spinner-container");
-    const spinner = document.getElementsByClassName("spinner")[0];
-    // Hide the spinner
-    setTimeout(() => {
-        spinnerContainer.style.display = 'none';
-        spinnerContainer.remove(); 
-  }, 2000);
-})
+// window.addEventListener("load", () => {
+//     const spinnerContainer = document.getElementById("spinner-container");
+//     const spinner = document.getElementsByClassName("spinner")[0];
+//     // Hide the spinner
+//     setTimeout(() => {
+//         spinnerContainer.style.display = 'none';
+//         spinnerContainer.remove(); 
+//   }, 2000);
+// })
 
-window.addEventListener("resize", updatesize());
+window.addEventListener("resize", updateHeight());
 
 
+async function loadContent(url, selector) {
+    try {
+      const response = await fetch(url);
+      const text = await response.text();
+      const element = document.querySelector(selector);
+      if (element) {
+        element.innerHTML = text;
+      }
+    } catch (error) {
+      console.error("Failed to load content:", error);
+    }
+  }
+
+async function loadData(url) {
+    try {
+      const response = await fetch(url);
+      const text = await response.text();
+      const room = document.getElementById("room").value
+      const historyMap = new Map(Object.entries(JSON.parse(text)))
+      const roomHistory = objectToMapWithDateAsKey(historyMap.get(room));
+      const WeekList = Array.from(document.querySelectorAll(".day-header"));
+      console.log(roomHistory)
+      WeekList.shift(); //to remove the empty record
+      WeekList.forEach(date =>{
+        const weekCalenderDate = new Date(date.dataset.date).toISOString()
+        if(roomHistory.has(weekCalenderDate)){
+            const dateHistoryList = roomHistory.get(weekCalenderDate)
+            dateHistoryList.forEach(dateHistory => {
+                console.log(dateHistory.startTime.substring(11,16))
+                Array.from(date.parentElement.children[1].children).forEach(htmlDate =>{
+                    console.log(dateHistory.startTime.substring(11,16))
+                    console.log(htmlDate.dataset.time)
+                    if(htmlDate.dataset.time === dateHistory.startTime.substring(11,16)){
+                        console.log("inside1")
+                        htmlDate.innerHTML = "Booked By " + dateHistory.name
+                        htmlDate.classList.add('no-hover');
+                        htmlDate.style = "font-size:x-small;cursor: no-drop;hover:none"
+                        htmlDate.removeEventListener("click", updateCalendarDateStyle) //need to remove event listner
+                    }
+                })
+            })
+
+        }
+      })
+    //   const weekStartDate = new Date(document.querySelectorAll(".day-header")[1].dataset.date);
+    //   const weekEndDate = new Date(document.querySelectorAll(".day-header")[7].dataset.date);
+    //   for (const dateStr of roomHistory.keys()) {
+    //     const date = new Date(dateStr);
+    //     if(isDateBefore(date,weekStartDate) && isDateBefore(weekEndDate,date)){
+    //         blockbookedSlot(date,roomHistory.get(dateStr));
+    //     }
+    //   }
+    } catch (error) {
+      console.error("Failed to load history:", error);
+    }
+}
+
+function isDateBefore(dateToBeCheked,referenceDate) {
+    return referenceDate < dateToBeCheked;
+}
+
+function objectToMapWithDateAsKey(inputObj){
+    const map = new Map();
+    for (const key in inputObj){
+        const date = new Date(key);
+        date.setUTCHours(18, 30, 0, 0);
+        map.set(date.toISOString() , inputObj[key]);
+    }
+    return map;
+}
+
+function blockbookedSlot(date,bookedList){
+    console.log(date)
+    console.log(bookedList)
+    const WeekList = Array.from(document.querySelectorAll(".day-header"))
+}

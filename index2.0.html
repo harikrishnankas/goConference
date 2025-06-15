@@ -4,24 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Schedule Meeting</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/2.0css">
 </head>
 <body onload="load()">
-  <div id="spinner-container">
+  {{.}}
+  <!-- <div id="spinner-container">
     <div>
       <p>Enna Ramalingam allae paka midiyala epdi iruka</p>
     </div>
-  <div class="spinner"></div>
+  <div class="spinner"></div> -->
 </div>
   <div class="form" style="position: sticky;top: 0;">
-    <div class="form-elements-container">
+    <form method="post" action="/bookslot">
+       <div class="form-elements">
+      <div class="form-elements-container">
       <div class="name">
         <label for="name">Name:</label>
-        <input type="text" id="name" />
+        <input type="text" id="name" name="name" required/>
       </div>
-      <label for="name">conference room:</label>
+      <label for="room">conference room:</label>
       <div class="room">
-       <select name="room">
+       <select name="room" id="room">
           <option value="conference room 1">conference room 1</option>
           <option value="conference room 2">conference room 2</option>
           <option value="conference room 3">conference room 3</option>
@@ -31,17 +34,23 @@
     <div class="form-elements-container">
       <div class="date">
         <label for="date">Date:</label>
-        <input type="date" id="date" onchange="changeCalendarHeader()"/>
+        <input type="date" id="date" name="date" required onchange="changeCalendarHeader()"/>
       </div>
       <div class="startTime">
         <label for="startTime">StartTime:</label>
-        <input type="time" id="startTime" />
+        <input type="time" id="startTime" name="startTime" required />
       </div>
       <div class="endTime">
         <label for="endTime">EndTime:</label>
-        <input type="time" id="endTime" />
+        <input type="time" id="endTime" name="endTime" required />
       </div>
     </div>
+    </div>
+    <div class="form-submit">
+      <input type="submit" />
+    </div>
+    </form>
+   
   </div>
 
   <div class="calendar-container">
@@ -51,7 +60,6 @@
     </div>
     
   </div>
-
-  <script src="index2.0.js" charset="UTF-8"></script>
+  <script src="/2.0js" charset="UTF-8"></script>
 </body>
 </html>

@@ -25,6 +25,7 @@ func main() {
 	bookingDetailsMap := make(map[string]map[string][]BookingDetail)
 	tmpl := template.Must(template.ParseFiles("index.html"))
 	tmplhistory := template.Must(template.ParseFiles("history.html"))
+	tmpl2_0 := template.Must(template.ParseFiles("index2.0.html"))
 
 	// Serve the HTML file
 	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
@@ -32,7 +33,10 @@ func main() {
 	})
 
 	http.HandleFunc("/2.0", func(res http.ResponseWriter, req *http.Request) {
-		http.ServeFile(res, req, "index2.0.html")
+		// readJSON(bookingDetailsMap)
+		// historyMapByDate := getHistoryMapByDate(bookingDetailsMap)
+		tmpl2_0.Execute(res, nil)
+		// http.ServeFile(res, req, "index2.0.html")
 	})
 
 	http.HandleFunc("/2.0js", func(res http.ResponseWriter, req *http.Request) {
@@ -51,10 +55,17 @@ func main() {
 		http.ServeFile(res, req, "index.js")
 	})
 
+	http.HandleFunc("/historyPage", func(res http.ResponseWriter, req *http.Request) {
+		readJSON(bookingDetailsMap)
+		// historyMapByDate := getHistoryMapByDate(bookingDetailsMap)
+		tmplhistory.Execute(res, bookingDetailsMap)
+	})
+
 	http.HandleFunc("/history", func(res http.ResponseWriter, req *http.Request) {
 		readJSON(bookingDetailsMap)
-		historyMapByDate := getHistoryMapByDate(bookingDetailsMap)
-		tmplhistory.Execute(res, historyMapByDate)
+		// historyMapByDate := getHistoryMapByDate(bookingDetailsMap)
+		json.NewEncoder(res).Encode(bookingDetailsMap)
+		// tmplhistory.Execute(res, nil)
 	})
 
 	// Handle form submission
@@ -77,7 +88,7 @@ func main() {
 						bookingArray = append(bookingArray, data)
 						dateMap[date] = bookingArray
 					} else {
-						tmpl.Execute(res, "Already booked")
+						tmpl2_0.Execute(res, "Already booked")
 					}
 				} else {
 					dateMap[date] = []BookingDetail{data}
@@ -92,7 +103,7 @@ func main() {
 			// Respond to the client
 			// res.Write([]byte("Form submitted successfully!"))
 			// http.ServeFile(res, req, "index.html")
-			tmpl.Execute(res, "Submmited")
+			tmpl2_0.Execute(res, "Submmited")
 		} else {
 			http.Error(res, "Invalid request method", http.StatusMethodNotAllowed)
 		}
@@ -140,7 +151,6 @@ func getHistoryMapByDate(bookingDetailsMap map[string]map[string][]BookingDetail
 func isSlotAvailable(bookingArray []BookingDetail, startTime, endTime time.Time) bool {
 	for i := range bookingArray {
 		savedData := bookingArray[i]
-		fmt.Println("inside loop", savedData)
 		if checkTimeIsInBetween(savedData, startTime, endTime) {
 			return false
 		}
@@ -160,7 +170,6 @@ func parseDate(dateStr string, timeStr string) time.Time {
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
-	fmt.Println(parsedDate)
 	return parsedDate
 }
 
