@@ -9,6 +9,14 @@
  .form {
    padding-top: 5vh;
    background-color: #1e1e1e;
+   position: sticky;
+   top: 0;
+ }
+
+ .form-elements{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
  }
 
  .form-elements-container {
@@ -17,6 +25,13 @@
    align-items: center;
    margin-bottom: 20px;
    padding: auto;
+ }
+
+ .form-submit{ 
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+
  }
 
  .form-elements-container>* {
@@ -81,6 +96,11 @@
 
  .Calendar-time-slot:hover {
    background-color: rgba(255, 255, 255, 0.1);
+ }
+
+ .no-hover{
+  font-size:x-small;
+  cursor: no-drop;
  }
 
  .no-hover:hover {

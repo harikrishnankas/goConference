@@ -129,15 +129,19 @@ function load(){
     loadData("/history")
 }
 
-// window.addEventListener("load", () => {
-//     const spinnerContainer = document.getElementById("spinner-container");
-//     const spinner = document.getElementsByClassName("spinner")[0];
-//     // Hide the spinner
-//     setTimeout(() => {
-//         spinnerContainer.style.display = 'none';
-//         spinnerContainer.remove(); 
-//   }, 2000);
-// })
+window.addEventListener("load", () => {
+    const message = document.getElementById("message");
+    if(message.innerHTML == "Submmited"){
+        document.getElementById("spinner-text").innerHTML = "varataaa 🤣🤣👋👋"
+    }
+    const spinnerContainer = document.getElementById("spinner-container");
+    const spinner = document.getElementsByClassName("spinner")[0];
+    // Hide the spinner
+    setTimeout(() => {
+        spinnerContainer.style.display = 'none';
+        spinnerContainer.remove(); 
+  }, 2000);
+})
 
 window.addEventListener("resize", updateHeight());
 
@@ -156,6 +160,7 @@ async function loadContent(url, selector) {
   }
 
 async function loadData(url) {
+    removePreviousWeekHistoryDetails();
     try {
       const response = await fetch(url);
       const text = await response.text();
@@ -166,20 +171,18 @@ async function loadData(url) {
       console.log(roomHistory)
       WeekList.shift(); //to remove the empty record
       WeekList.forEach(date =>{
-        const weekCalenderDate = new Date(date.dataset.date).toISOString()
+        const weekCalenderDate = new Date(date.dataset.date).toISOString()// TODO: remove 5:30
+        console.log("date from HTML " +date.dataset.date)
+        console.log(weekCalenderDate);
         if(roomHistory.has(weekCalenderDate)){
             const dateHistoryList = roomHistory.get(weekCalenderDate)
             dateHistoryList.forEach(dateHistory => {
-                console.log(dateHistory.startTime.substring(11,16))
                 Array.from(date.parentElement.children[1].children).forEach(htmlDate =>{
-                    console.log(dateHistory.startTime.substring(11,16))
-                    console.log(htmlDate.dataset.time)
                     if(htmlDate.dataset.time === dateHistory.startTime.substring(11,16)){
-                        console.log("inside1")
                         htmlDate.innerHTML = "Booked By " + dateHistory.name
+                        htmlDate.classList.add('history');
                         htmlDate.classList.add('no-hover');
-                        htmlDate.style = "font-size:x-small;cursor: no-drop;hover:none"
-                        htmlDate.removeEventListener("click", updateCalendarDateStyle) //need to remove event listner
+                        htmlDate.removeEventListener("click", updateCalendarDateStyle) //to remove event listner
                     }
                 })
             })
@@ -199,6 +202,16 @@ async function loadData(url) {
     }
 }
 
+function removePreviousWeekHistoryDetails(){
+    const historyToBeRemoved = Array.from(document.getElementsByClassName("history"));
+    historyToBeRemoved.forEach(historyElement => {
+        historyElement.innerHTML = ""
+        historyElement.classList.remove("history");
+        historyElement.classList.remove("no-hover");
+        historyElement.addEventListener("click", updateCalendarDateStyle);
+    })
+}
+
 function isDateBefore(dateToBeCheked,referenceDate) {
     return referenceDate < dateToBeCheked;
 }
@@ -207,7 +220,7 @@ function objectToMapWithDateAsKey(inputObj){
     const map = new Map();
     for (const key in inputObj){
         const date = new Date(key);
-        date.setUTCHours(18, 30, 0, 0);
+        date.setUTCHours(-5, -30, 0, 0);
         map.set(date.toISOString() , inputObj[key]);
     }
     return map;
